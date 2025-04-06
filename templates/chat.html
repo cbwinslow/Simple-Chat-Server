@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CBW Chat Room</title>
+    <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
+    <style>
+        body { background: #111; color: #0f0; font-family: monospace; padding: 20px; }
+        #messages { height: 300px; overflow-y: scroll; border: 1px solid #0f0; padding: 10px; }
+        input { width: 100%; padding: 10px; background: #222; color: #0f0; border: 1px solid #0f0; }
+    </style>
+</head>
+<body>
+    <h1>Welcome to CBW Chat 💬</h1>
+    <div id="messages"></div>
+    <input id="msg" autocomplete="off" placeholder="Type and hit Enter..." />
+
+    <script>
+        const socket = io();
+        const msgBox = document.getElementById('msg');
+        const messages = document.getElementById('messages');
+
+        socket.on('message', (msg) => {
+            const div = document.createElement('div');
+            div.textContent = msg;
+            messages.appendChild(div);
+            messages.scrollTop = messages.scrollHeight;
+        });
+
+        msgBox.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                socket.send(msgBox.value);
+                msgBox.value = '';
+            }
+        });
+    </script>
+</body>
+</html>
